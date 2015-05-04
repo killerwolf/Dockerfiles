@@ -18,6 +18,7 @@ RUN apk add --update python groff \
 #Configure AWS cli
 ENV AWS_ACCESS_KEY_ID AWS_ACCESS_KEY_ID
 ENV AWS_SECRET_ACCESS_KEY AWS_SECRET_ACCESS_KEY
+ENV S3_BUCKET S3_BUCKET
 
 # create archive of volume folder and store it on AWS
 ADD backmydataup.sh /backmydataup.sh
