@@ -5,7 +5,7 @@
 This container image is very lightweight < 50MB ans is based 
 
 ```console
-killerbookpro:ansible killerwolf$ docker images
+$ docker images
 REPOSITORY            TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
 killerwolf/ansible    latest              bcf71f52f6fa        23 hours ago        49.27 MB 
 ```
