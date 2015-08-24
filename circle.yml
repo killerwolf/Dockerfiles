@@ -8,6 +8,10 @@ dependencies:
     - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/3.1/g' | docker build -t ansible:3.1-alpine -
     - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/latest/g' | docker build -t ansible:latest-alpine -
     - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/edge/g' | docker build -t ansible:edge-alpine -
+    - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.11/g' | docker build -t killerwolf/hugo:0.11 -
+    - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.12/g' | docker build -t killerwolf/hugo:0.12 -
+    - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.13/g' | docker build -t killerwolf/hugo:0.13 -
+    - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.14/g' | docker build -t killerwolf/hugo:0.14 -
 
 test:
   post:
@@ -15,6 +19,10 @@ test:
     - docker run ansible:3.1-alpine ansible --version|grep 'ansible 1.8'
     - docker run ansible:latest-alpine ansible --version|grep 'ansible 1.8'
     - docker run ansible:edge-alpine ansible --version|grep 'ansible 1.9'
+    - docker run killerwolf/hugo:0.11 version|grep 'Hugo Static Site Generator v0.11'
+    - docker run killerwolf/hugo:0.12 version|grep 'Hugo Static Site Generator v0.12'
+    - docker run killerwolf/hugo:0.13 version|grep 'Hugo Static Site Generator v0.13'
+    - docker run killerwolf/hugo:0.14 version|grep 'Hugo Static Site Generator v0.14'
 
 deployment:
   hub:
@@ -25,5 +33,5 @@ deployment:
       - docker tag ansible:3.1-alpine killerwolf/ansible:$(docker run --rm ansible:3.1-alpine ansible --version |grep ansible|awk '{print $NF}')
       - docker tag ansible:latest-alpine killerwolf/ansible:$(docker run --rm ansible:latest-alpine ansible --version |grep ansible|awk '{print $NF}')
       - docker tag ansible:edge-alpine killerwolf/ansible:$(docker run --rm ansible:edge-alpine ansible --version |grep ansible|awk '{print $NF}')
-      - docker tag ansible:edge-alpine killerwolf/ansible:latest
-      - docker push killerwolf/ansible
+      - docker tag ansible:edge-alpine killerwolf/ansible:latest & docker push killerwolf/ansible
+      - docker tag killerwolf/hugo:0.14 killerwolf/hugo:latest && docker push killerwolf/hugo

@@ -7,6 +7,7 @@ This repository powers [killerwolf/hugo](https://registry.hub.docker.com/u/kille
 ```console
 $ docker run killerwolf/hugo:0.13 version
 Hugo Static Site Generator v0.13 BuildDate: 2015-02-22T04:02:30Z
+```
 
 ## Usage 
 
