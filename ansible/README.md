@@ -1,5 +1,7 @@
 # killerwolf/ansible
 
+[![](https://badge.imagelayers.io/killerwolf/ansible:latest.svg)](https://imagelayers.io/?images=killerwolf/ansible:latest 'Get your own badge on imagelayers.io')
+
 > This container offers a containerized version of ansible. Avoid using localy instaled version of ansible
 
 This container image is very lightweight =~ 50MB ans is based 
