@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:%%ALPINE_VERSION%%
 
 MAINTAINER killerwolf <killerwolf06@gmail.com> @killerwolf
 

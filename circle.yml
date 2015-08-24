@@ -1,0 +1,29 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  pre:
+    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/2.7/g' | docker build -t ansible:2.7-alpine -
+    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/3.1/g' | docker build -t ansible:3.1-alpine -
+    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/latest/g' | docker build -t ansible:latest-alpine -
+    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/edge/g' | docker build -t ansible:edge-alpine -
+
+test:
+  post:
+    - docker run ansible:2.7-alpine ansible --version|grep 'ansible 1.6'
+    - docker run ansible:3.1-alpine ansible --version|grep 'ansible 1.8'
+    - docker run ansible:latest-alpine ansible --version|grep 'ansible 1.8'
+    - docker run ansible:edge-alpine ansible --version|grep 'ansible 1.9'
+
+deployment:
+  hub:
+    branch: master
+    commands:
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker tag ansible:2.7-alpine killerwolf/ansible:$(docker run --rm ansible:2.7-alpine ansible --version |awk '{print $NF}')
+      - docker tag ansible:3.1-alpine killerwolf/ansible:$(docker run --rm ansible:3.1-alpine ansible --version |grep ansible|awk '{print $NF}')
+      - docker tag ansible:latest-alpine killerwolf/ansible:$(docker run --rm ansible:latest-alpine ansible --version |grep ansible|awk '{print $NF}')
+      - docker tag ansible:edge-alpine killerwolf/ansible:$(docker run --rm ansible:edge-alpine ansible --version |grep ansible|awk '{print $NF}')
+      - docker tag ansible:edge-alpine killerwolf/ansible:latest
+      - docker push killerwolf/ansible
