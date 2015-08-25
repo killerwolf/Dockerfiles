@@ -11,8 +11,8 @@ Run ansible in a container instead of installing it locally.
 ### killerwolf/backmydataup
 
 WIP - backup volumes from data containers (and push them to s3 for example).  
-*Documentation:* [backupmydata/README.md](https://github.com/killerwolf/Dockerfiles/tree/master/backupmydata)  
-*DockerHub:* [killerwolf/backupmydata](https://hub.docker.com/r/killerwolf/backupmydata)
+*Documentation:* [backmydataup/README.md](https://github.com/killerwolf/Dockerfiles/tree/master/backmydataup)  
+*DockerHub:* [killerwolf/backmydataup](https://hub.docker.com/r/killerwolf/backmydataup)
 
 ### killerwolf/data 
 
