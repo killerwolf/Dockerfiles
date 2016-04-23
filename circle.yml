@@ -16,11 +16,11 @@ dependencies:
 
 test:
   post:
-    - docker run ansible:2.7-alpine ansible --version|grep 'ansible 1.6'
-    - docker run ansible:3.1-alpine ansible --version|grep 'ansible 1.8'
-    - docker run ansible:3.2-alpine ansible --version'
-    - docker run ansible:3.3-alpine ansible --version'
-    - docker run ansible:edge-alpine ansible --version'
+    - docker run killerwolf/ansible:2.7-alpine ansible --version|grep 'ansible 1.6'
+    - docker run killerwolf/ansible:3.1-alpine ansible --version|grep 'ansible 1.8'
+    - docker run killerwolf/ansible:3.2-alpine ansible --version'
+    - docker run killerwolf/ansible:3.3-alpine ansible --version'
+    - docker run killerwolf/ansible:edge-alpine ansible --version'
     - docker run killerwolf/hugo:0.11 version|grep 'Hugo Static Site Generator v0.11'
     - docker run killerwolf/hugo:0.12 version|grep 'Hugo Static Site Generator v0.12'
     - docker run killerwolf/hugo:0.13 version|grep 'Hugo Static Site Generator v0.13'
@@ -31,9 +31,10 @@ deployment:
     branch: master
     commands:
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-      - docker tag ansible:2.7-alpine killerwolf/ansible:$(docker run --rm ansible:2.7-alpine ansible --version |awk '{print $NF}')
-      - docker tag ansible:3.1-alpine killerwolf/ansible:$(docker run --rm ansible:3.1-alpine ansible --version |grep ansible|awk '{print $NF}')
-      - docker tag ansible:latest-alpine killerwolf/ansible:$(docker run --rm ansible:latest-alpine ansible --version |grep ansible|awk '{print $NF}')
-      - docker tag ansible:edge-alpine killerwolf/ansible:$(docker run --rm ansible:edge-alpine ansible --version |grep ansible|awk '{print $NF}')
-      - docker tag ansible:edge-alpine killerwolf/ansible:latest & docker push killerwolf/ansible
+      - docker tag killerwolf/ansible:2.7-alpine killerwolf/ansible:$(docker run killerwolf/ansible:2.7-alpine ansible --version |awk '{print $NF}')
+      - docker tag killerwolf/ansible:3.1-alpine killerwolf/ansible:$(docker run killerwolf/ansible:3.1-alpine ansible --version |grep ansible|awk '{print $NF}')
+      - docker tag killerwolf/ansible:3.1-alpine killerwolf/ansible:$(docker run killerwolf/ansible:3.2-alpine ansible --version |grep ansible|awk '{print $NF}')
+      - docker tag killerwolf/ansible:3.1-alpine killerwolf/ansible:$(docker run killerwolf/ansible:3.3-alpine ansible --version |grep ansible|awk '{print $NF}')
+      - docker tag killerwolf/ansible:edge-alpine killerwolf/ansible:$(docker run killerwolf/ansible:edge-alpine ansible --version |grep ansible|awk '{print $NF}')
+      - docker tag killerwolf/ansible:edge-alpine killerwolf/ansible:latest & docker push killerwolf/ansible
       - docker tag killerwolf/hugo:0.14 killerwolf/hugo:latest && docker push killerwolf/hugo
