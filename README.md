@@ -1,4 +1,4 @@
-# Dockerfiles 
+# Dockerfiles [![Circle CI](https://circleci.com/gh/killerwolf/Dockerfiles.svg?style=svg)](https://circleci.com/gh/killerwolf/Dockerfiles)
 
 All these images are available on [DockerHub](https://hub.docker.com/r/killerwolf/).
 
