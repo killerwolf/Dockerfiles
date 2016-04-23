@@ -1,0 +1,13 @@
+{
+    "name": "killerwolf/phptoolbelt_demo",
+    "description": "fixture project",
+    "require": {
+        "killerwolf/jcdodatawrapper": "~1.0"
+    },
+    "authors": [
+        {
+            "name": "Hamdi LAADHARI",
+            "email": "killerwolf06@gmail.com"
+        }
+    ]
+}
