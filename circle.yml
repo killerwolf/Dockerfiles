@@ -6,7 +6,8 @@ dependencies:
   pre:
     - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/2.7/g' | docker build -t ansible:2.7-alpine -
     - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/3.1/g' | docker build -t ansible:3.1-alpine -
-    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/latest/g' | docker build -t ansible:latest-alpine -
+    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/3.2/g' | docker build -t ansible:edge-alpine -
+    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/3.3/g' | docker build -t ansible:edge-alpine -
     - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/edge/g' | docker build -t ansible:edge-alpine -
     - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.11/g' | docker build -t killerwolf/hugo:0.11 -
     - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.12/g' | docker build -t killerwolf/hugo:0.12 -
@@ -17,8 +18,9 @@ test:
   post:
     - docker run ansible:2.7-alpine ansible --version|grep 'ansible 1.6'
     - docker run ansible:3.1-alpine ansible --version|grep 'ansible 1.8'
-    - docker run ansible:latest-alpine ansible --version|grep 'ansible 1.8'
-    - docker run ansible:edge-alpine ansible --version|grep 'ansible 1.9'
+    - docker run ansible:3.2-alpine ansible --version'
+    - docker run ansible:3.3-alpine ansible --version'
+    - docker run ansible:edge-alpine ansible --version'
     - docker run killerwolf/hugo:0.11 version|grep 'Hugo Static Site Generator v0.11'
     - docker run killerwolf/hugo:0.12 version|grep 'Hugo Static Site Generator v0.12'
     - docker run killerwolf/hugo:0.13 version|grep 'Hugo Static Site Generator v0.13'
