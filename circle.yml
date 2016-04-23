@@ -13,6 +13,7 @@ dependencies:
     - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.12/g' | docker build -t killerwolf/hugo:0.12 -
     - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.13/g' | docker build -t killerwolf/hugo:0.13 -
     - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.14/g' | docker build -t killerwolf/hugo:0.14 -
+    - docker build -t killerwolf/phptoolbelt:1.0.0 phptoolbelt/
 
 test:
   post:
@@ -38,3 +39,4 @@ deployment:
       - docker tag killerwolf/ansible:edge-alpine killerwolf/ansible:$(docker run killerwolf/ansible:edge-alpine ansible --version |grep ansible|awk '{print $NF}')
       - docker tag killerwolf/ansible:edge-alpine killerwolf/ansible:latest & docker rmi killerwolf/ansible:2.7-alpine killerwolf/ansible:3.1-alpine killerwolf/ansible:3.2-alpine killerwolf/ansible:3.3-alpine killerwolf/ansible:edge-alpine & docker push killerwolf/ansible
       - docker tag killerwolf/hugo:0.14 killerwolf/hugo:latest && docker push killerwolf/hugo
+      - docker tag killerwolf/phptoolbelt:1.0.0 killerwolf/phptoolbelt:latest && docker push killerwolf/phptoolbelt
