@@ -4,11 +4,11 @@ machine:
 
 dependencies:
   pre:
-    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/2.7/g' | docker build -t ansible:2.7-alpine -
-    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/3.1/g' | docker build -t ansible:3.1-alpine -
-    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/3.2/g' | docker build -t ansible:edge-alpine -
-    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/3.3/g' | docker build -t ansible:edge-alpine -
-    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/edge/g' | docker build -t ansible:edge-alpine -
+    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/2.7/g' | docker build -t killerwolf/ansible:2.7-alpine -
+    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/3.1/g' | docker build -t killerwolf/ansible:3.1-alpine -
+    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/3.2/g' | docker build -t killerwolf/ansible:3.2-alpine -
+    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/3.3/g' | docker build -t killerwolf/ansible:3.3-alpine -
+    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/edge/g' | docker build -t killerwolf/ansible:edge-alpine -
     - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.11/g' | docker build -t killerwolf/hugo:0.11 -
     - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.12/g' | docker build -t killerwolf/hugo:0.12 -
     - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.13/g' | docker build -t killerwolf/hugo:0.13 -
