@@ -36,5 +36,5 @@ deployment:
       - docker tag killerwolf/ansible:3.2-alpine killerwolf/ansible:$(docker run killerwolf/ansible:3.2-alpine ansible --version |grep ansible|awk '{print $NF}')
       - docker tag killerwolf/ansible:3.3-alpine killerwolf/ansible:$(docker run killerwolf/ansible:3.3-alpine ansible --version |grep ansible|awk '{print $NF}')
       - docker tag killerwolf/ansible:edge-alpine killerwolf/ansible:$(docker run killerwolf/ansible:edge-alpine ansible --version |grep ansible|awk '{print $NF}')
-      - docker tag killerwolf/ansible:edge-alpine killerwolf/ansible:latest & docker push killerwolf/ansible
+      - docker tag killerwolf/ansible:edge-alpine killerwolf/ansible:latest & docker rmi killerwolf/ansible:2.7-alpine killerwolf/ansible:3.1-alpine killerwolf/ansible:3.2-alpine killerwolf/ansible:3.3-alpine killerwolf/ansible:edge-alpine & docker push killerwolf/ansible
       - docker tag killerwolf/hugo:0.14 killerwolf/hugo:latest && docker push killerwolf/hugo
