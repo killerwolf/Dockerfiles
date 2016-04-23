@@ -18,9 +18,9 @@ test:
   post:
     - docker run killerwolf/ansible:2.7-alpine ansible --version|grep 'ansible 1.6'
     - docker run killerwolf/ansible:3.1-alpine ansible --version|grep 'ansible 1.8'
-    - docker run killerwolf/ansible:3.2-alpine ansible --version'
-    - docker run killerwolf/ansible:3.3-alpine ansible --version'
-    - docker run killerwolf/ansible:edge-alpine ansible --version'
+    - docker run killerwolf/ansible:3.2-alpine ansible --version|grep 'ansible 1.8'
+    - docker run killerwolf/ansible:3.3-alpine ansible --version|grep 'ansible 1.9'
+    - docker run killerwolf/ansible:edge-alpine ansible --version|grep 'ansible 2.0'
     - docker run killerwolf/hugo:0.11 version|grep 'Hugo Static Site Generator v0.11'
     - docker run killerwolf/hugo:0.12 version|grep 'Hugo Static Site Generator v0.12'
     - docker run killerwolf/hugo:0.13 version|grep 'Hugo Static Site Generator v0.13'
