@@ -4,31 +4,31 @@ machine:
 
 dependencies:
   pre:
-    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/2.7/g' | docker build -t killerwolf/ansible:2.7-alpine -
-    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/3.1/g' | docker build -t killerwolf/ansible:3.1-alpine -
-    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/3.2/g' | docker build -t killerwolf/ansible:3.2-alpine -
-    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/3.3/g' | docker build -t killerwolf/ansible:3.3-alpine -
-    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/edge/g' | docker build -t killerwolf/ansible:edge-alpine -
-    - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.11/g' | docker build -t killerwolf/hugo:0.11 -
-    - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.12/g' | docker build -t killerwolf/hugo:0.12 -
-    - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.13/g' | docker build -t killerwolf/hugo:0.13 -
-    - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.14/g' | docker build -t killerwolf/hugo:0.14 -
+#    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/2.7/g' | docker build -t killerwolf/ansible:2.7-alpine -
+#    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/3.1/g' | docker build -t killerwolf/ansible:3.1-alpine -
+#    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/3.2/g' | docker build -t killerwolf/ansible:3.2-alpine -
+#    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/3.3/g' | docker build -t killerwolf/ansible:3.3-alpine -
+#    - cat ansible/Dockerfile.template | sed -e 's/%%ALPINE_VERSION%%/edge/g' | docker build -t killerwolf/ansible:edge-alpine -
+#    - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.11/g' | docker build -t killerwolf/hugo:0.11 -
+#    - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.12/g' | docker build -t killerwolf/hugo:0.12 -
+#    - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.13/g' | docker build -t killerwolf/hugo:0.13 -
+#    - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.14/g' | docker build -t killerwolf/hugo:0.14 -
     - docker build -t killerwolf/phptoolbelt:1.0.0 phptoolbelt/
     - sudo add-apt-repository ppa:duggan/bats --yes
     - sudo apt-get update -qq
     - sudo apt-get install -qq bats
 
 test:
-  override:
-    - docker run killerwolf/ansible:2.7-alpine ansible --version|grep 'ansible 1.6'
-    - docker run killerwolf/ansible:3.1-alpine ansible --version|grep 'ansible 1.8'
-    - docker run killerwolf/ansible:3.2-alpine ansible --version|grep 'ansible 1.8'
-    - docker run killerwolf/ansible:3.3-alpine ansible --version|grep 'ansible 1.9'
-    - docker run killerwolf/ansible:edge-alpine ansible --version|grep 'ansible 2.0'
-    - docker run killerwolf/hugo:0.11 version|grep 'Hugo Static Site Generator v0.11'
-    - docker run killerwolf/hugo:0.12 version|grep 'Hugo Static Site Generator v0.12'
-    - docker run killerwolf/hugo:0.13 version|grep 'Hugo Static Site Generator v0.13'
-    - docker run killerwolf/hugo:0.14 version|grep 'Hugo Static Site Generator v0.14'
+  pre:
+#    - docker run killerwolf/ansible:2.7-alpine ansible --version|grep 'ansible 1.6'
+#    - docker run killerwolf/ansible:3.1-alpine ansible --version|grep 'ansible 1.8'
+#    - docker run killerwolf/ansible:3.2-alpine ansible --version|grep 'ansible 1.8'
+#    - docker run killerwolf/ansible:3.3-alpine ansible --version|grep 'ansible 1.9'
+#    - docker run killerwolf/ansible:edge-alpine ansible --version|grep 'ansible 2.0'
+#    - docker run killerwolf/hugo:0.11 version|grep 'Hugo Static Site Generator v0.11'
+#    - docker run killerwolf/hugo:0.12 version|grep 'Hugo Static Site Generator v0.12'
+#    - docker run killerwolf/hugo:0.13 version|grep 'Hugo Static Site Generator v0.13'
+#    - docker run killerwolf/hugo:0.14 version|grep 'Hugo Static Site Generator v0.14'
     - bats phptoolbelt/tests
 
 deployment:
@@ -36,11 +36,11 @@ deployment:
     branch: master
     commands:
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-      - docker tag killerwolf/ansible:2.7-alpine killerwolf/ansible:$(docker run killerwolf/ansible:2.7-alpine ansible --version |awk '{print $NF}')
-      - docker tag killerwolf/ansible:3.1-alpine killerwolf/ansible:$(docker run killerwolf/ansible:3.1-alpine ansible --version |grep ansible|awk '{print $NF}')
-      - docker tag killerwolf/ansible:3.2-alpine killerwolf/ansible:$(docker run killerwolf/ansible:3.2-alpine ansible --version |grep ansible|awk '{print $NF}')
-      - docker tag killerwolf/ansible:3.3-alpine killerwolf/ansible:$(docker run killerwolf/ansible:3.3-alpine ansible --version |grep ansible|awk '{print $NF}')
-      - docker tag killerwolf/ansible:edge-alpine killerwolf/ansible:$(docker run killerwolf/ansible:edge-alpine ansible --version |grep ansible|awk '{print $NF}')
-      - docker tag killerwolf/ansible:edge-alpine killerwolf/ansible:latest & docker rmi killerwolf/ansible:2.7-alpine killerwolf/ansible:3.1-alpine killerwolf/ansible:3.2-alpine killerwolf/ansible:3.3-alpine killerwolf/ansible:edge-alpine & docker push killerwolf/ansible
-      - docker tag killerwolf/hugo:0.14 killerwolf/hugo:latest && docker push killerwolf/hugo
+#      - docker tag killerwolf/ansible:2.7-alpine killerwolf/ansible:$(docker run killerwolf/ansible:2.7-alpine ansible --version |awk '{print $NF}')
+#      - docker tag killerwolf/ansible:3.1-alpine killerwolf/ansible:$(docker run killerwolf/ansible:3.1-alpine ansible --version |grep ansible|awk '{print $NF}')
+#      - docker tag killerwolf/ansible:3.2-alpine killerwolf/ansible:$(docker run killerwolf/ansible:3.2-alpine ansible --version |grep ansible|awk '{print $NF}')
+#      - docker tag killerwolf/ansible:3.3-alpine killerwolf/ansible:$(docker run killerwolf/ansible:3.3-alpine ansible --version |grep ansible|awk '{print $NF}')
+#      - docker tag killerwolf/ansible:edge-alpine killerwolf/ansible:$(docker run killerwolf/ansible:edge-alpine ansible --version |grep ansible|awk '{print $NF}')
+#      - docker tag killerwolf/ansible:edge-alpine killerwolf/ansible:latest & docker rmi killerwolf/ansible:2.7-alpine killerwolf/ansible:3.1-alpine killerwolf/ansible:3.2-alpine killerwolf/ansible:3.3-alpine killerwolf/ansible:edge-alpine & docker push killerwolf/ansible
+#      - docker tag killerwolf/hugo:0.14 killerwolf/hugo:latest && docker push killerwolf/hugo
       - docker tag killerwolf/phptoolbelt:1.0.0 killerwolf/phptoolbelt:latest && docker push killerwolf/phptoolbelt
