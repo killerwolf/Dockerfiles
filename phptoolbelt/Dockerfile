@@ -9,7 +9,6 @@ ENV PHPUNIT_VERSION 5.3.2
 ENV PATH $PATH:/root/.composer/vendor/bin/
 
 RUN mkdir /app
-
 WORKDIR /app
 
 # install composer (the recomended way)
