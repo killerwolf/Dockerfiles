@@ -13,7 +13,7 @@
 }
 
 @test "Test composer install works with phing" {
-	git revert --hard HEAD
+	rm -rf $(pwd)/phptoolbelt/tests/fixtures/{composer.lock,vendor/}
 	docker run -v $(pwd)/phptoolbelt/tests/fixtures:/app killerwolf/phptoolbelt phing composer_install && [ -d $(pwd)/phptoolbelt/tests/fixtures/vendor/composer ] && [ -f $(pwd)/phptoolbelt/tests/fixtures/composer.lock ]
 }
 
