@@ -14,9 +14,12 @@ dependencies:
     - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.13/g' | docker build -t killerwolf/hugo:0.13 -
     - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.14/g' | docker build -t killerwolf/hugo:0.14 -
     - docker build -t killerwolf/phptoolbelt:1.0.0 phptoolbelt/
+    - sudo add-apt-repository ppa:duggan/bats --yes
+    - sudo apt-get update -qq
+    - sudo apt-get install -qq bats
 
 test:
-  post:
+  override:
     - docker run killerwolf/ansible:2.7-alpine ansible --version|grep 'ansible 1.6'
     - docker run killerwolf/ansible:3.1-alpine ansible --version|grep 'ansible 1.8'
     - docker run killerwolf/ansible:3.2-alpine ansible --version|grep 'ansible 1.8'
@@ -26,6 +29,7 @@ test:
     - docker run killerwolf/hugo:0.12 version|grep 'Hugo Static Site Generator v0.12'
     - docker run killerwolf/hugo:0.13 version|grep 'Hugo Static Site Generator v0.13'
     - docker run killerwolf/hugo:0.14 version|grep 'Hugo Static Site Generator v0.14'
+    - bats phptoolbelt/tests
 
 deployment:
   hub:
