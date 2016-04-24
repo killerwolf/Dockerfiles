@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="PHPToolBelt " default="welcome" basedir="." description="a demo project">
+    <property name="message" value="Hello World!"/>
+    <target name="welcome">
+        <echo msg="${message}"/>
+    </target>
+    <target name="composer_install">
+        <exec passthru="true" command="composer install" />
+    </target>
+    <target name="test">
+        <exec passthru="true" command="phpunit --bootstrap vendor/autoload.php tests" />
+    </target>
+</project>

@@ -1,8 +1,13 @@
 {
     "name": "killerwolf/phptoolbelt_demo",
     "description": "fixture project",
+    "autoload": {
+        "psr-4":{
+            "Acme\\Demo\\": "src/"
+        }
+    },
     "require": {
-        "killerwolf/jcdodatawrapper": "~1.0"
+        "h4md1/jcdecaux-cyclocity": "~1.0"
     },
     "authors": [
         {
