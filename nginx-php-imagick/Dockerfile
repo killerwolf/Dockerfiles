@@ -12,10 +12,10 @@ RUN apk --update add \
 	rm -rf /var/cache/apk/* && \
 	pip install supervisor-stdout
 
-COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY docker/supervisor.img.ini /etc/supervisor.d/
-COPY docker/phpfpm/img.ini /etc/php/conf.d/
-COPY docker/phpfpm/php-fpm.conf /etc/php/
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+COPY supervisor.img.ini /etc/supervisor.d/
+COPY phpfpm/img.ini /etc/php/conf.d/
+COPY phpfpm/php-fpm.conf /etc/php/
 
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log
