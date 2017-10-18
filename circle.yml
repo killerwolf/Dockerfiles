@@ -16,6 +16,7 @@ dependencies:
     - cat hugo/Dockerfile.template | sed -e 's/%%HUGO_VERSION%%/0.14/g' | docker build -t killerwolf/hugo:0.14 -
 #    - docker build -t killerwolf/phptoolbelt:1.0.0 phptoolbelt/
     - docker build -t killerwolf/nginx-php-imagick:0.1.0 nginx-php-imagick/
+    - docker build -t killerwolf/people-indexer-ci:1.0.0 people-indexer/
 
 test:
   post:
@@ -45,3 +46,4 @@ deployment:
       - docker tag killerwolf/hugo:0.14 killerwolf/hugo:latest && docker push killerwolf/hugo
 #      - docker tag killerwolf/phptoolbelt:1.0.0 killerwolf/phptoolbelt:latest && docker push killerwolf/phptoolbelt
       - docker tag killerwolf/nginx-php-imagick:0.1.0 killerwolf/nginx-php-imagick:latest && docker push killerwolf/nginx-php-imagick
+      - docker tag killerwolf/people-indexer-ci:1.0.0 killerwolf/people-indexer-ci:latest && docker push killerwolf/people-indexer-ci
