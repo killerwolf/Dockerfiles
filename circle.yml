@@ -47,7 +47,7 @@ deployment:
       - docker tag killerwolf/ansible:3.4-alpine killerwolf/ansible:$(docker run killerwolf/ansible:3.4-alpine ansible --version |grep ansible|awk '{print $NF}')
       - docker tag killerwolf/ansible:3.5-alpine killerwolf/ansible:$(docker run killerwolf/ansible:3.5-alpine ansible --version |grep ansible|awk '{print $NF}')
       - docker tag killerwolf/ansible:3.6-alpine killerwolf/ansible:$(docker run killerwolf/ansible:3.6-alpine ansible --version |grep ansible|awk '{print $NF}')
-      - docker tag killerwolf/ansible:edge-alpine killerwolf/ansible:$(docker run killerwolf/ansible:edge-alpine ansible --version |grep ansible|awk '{print $NF}')
+      - docker tag killerwolf/ansible:edge-alpine killerwolf/ansible:$(docker run killerwolf/ansible:edge-alpine ansible --version |grep 'ansible 2.4'|awk '{print $NF}')
       - docker tag killerwolf/ansible:edge-alpine killerwolf/ansible:latest & docker rmi killerwolf/ansible:2.7-alpine killerwolf/ansible:3.1-alpine killerwolf/ansible:3.2-alpine killerwolf/ansible:3.3-alpine killerwolf/ansible:3.4-alpine killerwolf/ansible:3.5-alpine killerwolf/ansible:3.6-alpine killerwolf/ansible:edge-alpine & docker push killerwolf/ansible
       - docker tag killerwolf/hugo:0.14 killerwolf/hugo:latest && docker push killerwolf/hugo
 #      - docker tag killerwolf/phptoolbelt:1.0.0 killerwolf/phptoolbelt:latest && docker push killerwolf/phptoolbelt
