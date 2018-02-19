@@ -7,6 +7,7 @@ RUN apt-get -qqy update && \
     	curl \
     	apt-transport-https \
     	ca-certificates \
+        unzip \
     	git && \
     curl --fail -ssL -o setup-nodejs https://deb.nodesource.com/setup_6.x && \
     bash setup-nodejs && \
