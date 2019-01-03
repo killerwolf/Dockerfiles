@@ -1,4 +1,4 @@
-FROM php:5.6-cli
+FROM php:7.2-cli
 
 RUN apt-get -qqy update && \
     apt-get -qqy install \
@@ -8,13 +8,14 @@ RUN apt-get -qqy update && \
     	apt-transport-https \
     	ca-certificates \
         unzip \
+        gnupg2 \
     	git && \
-    curl --fail -ssL -o setup-nodejs https://deb.nodesource.com/setup_6.x && \
+    curl --fail -ssL -o setup-nodejs https://deb.nodesource.com/setup_8.x && \
     bash setup-nodejs && \
     apt-get install -qqy nodejs && \
-    pecl install xdebug-2.5.0 && docker-php-ext-enable xdebug && \
-    docker-php-ext-configure intl && \
+    pecl install xdebug-2.6.1 && docker-php-ext-enable xdebug && \
     docker-php-ext-install intl && \
+    docker-php-ext-configure intl && \
     docker-php-ext-install mbstring && \
     docker-php-ext-install zip && \
     docker-php-ext-install calendar && \
