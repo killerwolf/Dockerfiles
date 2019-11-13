@@ -10,7 +10,7 @@ RUN apt-get -qqy update && \
         unzip \
         gnupg2 \
     	git && \
-    curl --fail -ssL -o setup-nodejs https://deb.nodesource.com/setup_8.x && \
+    curl --fail -ssL -o setup-nodejs https://deb.nodesource.com/setup_10.x && \
     bash setup-nodejs && \
     apt-get install -qqy nodejs && \
     pecl install xdebug-2.6.1 && docker-php-ext-enable xdebug && \
