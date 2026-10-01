@@ -20,12 +20,13 @@ VOLUME ["/data", "/backup"]
 
 # The base image is a minimal aws-cli layer set: it ships coreutils, findutils
 # and sed, but neither tar nor gzip, so backmydataup.sh cannot archive anything
-# until they are installed. gzip arrives as a tar dependency.
-# The version is deliberately unpinned (hadolint DL3041, exempted in
+# until they are installed. gzip is a separate package on AL2023 and is not
+# pulled in by tar, so both are listed explicitly.
+# The versions are deliberately unpinned (hadolint DL3041, exempted in
 # .github/workflows/ci.yml): the base is already pinned by digest, and AL2023's
-# tar version moves with repository updates, so pinning it here would mostly
-# turn routine security updates into build failures.
-RUN dnf install -y tar && dnf clean all
+# tar/gzip versions move with repository updates, so pinning them here would
+# mostly turn routine security updates into build failures.
+RUN dnf install -y tar gzip && dnf clean all
 
 COPY backmydataup.sh /backmydataup.sh
 RUN chmod 0755 /backmydataup.sh
