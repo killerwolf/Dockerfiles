@@ -26,6 +26,11 @@ jobs:
         with:
           dockerfile: backmydataup/Dockerfile
           failure-threshold: warning
+          # DL3041 (pin the dnf package version) is exempted here rather than
+          # inline: hadolint did not honour the inline directive for this RUN.
+          # The base image is pinned by digest, so the tar version is allowed to
+          # track AL2023 security updates instead of breaking the build.
+          ignore: DL3041
 
       - name: Shellcheck backup script
         run: |
