@@ -1,41 +1,53 @@
-# Dockerfiles [![Circle CI](https://circleci.com/gh/killerwolf/Dockerfiles.svg?style=svg)](https://circleci.com/gh/killerwolf/Dockerfiles)
+# Dockerfiles
 
-All these images are available on [DockerHub](https://hub.docker.com/r/killerwolf/).
+Custom Docker images that are worth maintaining. This used to hold ten images
+from 2015-2016; most of them have been superseded by official or well-kept
+images. What remains is the one image with no upstream equivalent.
 
-### killerwolf/ansible 
+## killerwolf/backmydataup
 
-Run ansible in a container instead of installing it locally.  
-*Documentation:* [ansible/README.md](https://github.com/killerwolf/Dockerfiles/tree/master/ansible)  
-*DockerHub:* [killerwolf/ansible](https://hub.docker.com/r/killerwolf/ansible)
+Archive a data volume from a container and sync the archive to S3 or any
+S3-compatible store. Based on `amazon/aws-cli` v2, pinned by digest.
 
-### killerwolf/backmydataup
+* **Documentation:** [backmydataup/README.md](backmydataup/README.md)
+* **DockerHub:** [killerwolf/backmydataup](https://hub.docker.com/r/killerwolf/backmydataup)
 
-WIP - backup volumes from data containers (and push them to s3 for example).  
-*Documentation:* [backmydataup/README.md](https://github.com/killerwolf/Dockerfiles/tree/master/backmydataup)  
-*DockerHub:* [killerwolf/backmydataup](https://hub.docker.com/r/killerwolf/backmydataup)
+```console
+docker run --rm \
+  -v mydata:/data:ro -v mybackups:/backup \
+  -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY \
+  -e S3_BUCKET=my-bucket \
+  killerwolf/backmydataup:latest
+```
 
-### killerwolf/data 
+## Removed images
 
-Simple data container on top of [alpine](https://hub.docker.com/r/killerwolf/data/).  
-*Documentation:* [data/README.md](https://github.com/killerwolf/Dockerfiles/tree/master/data)  
-*DockerHub:* [killerwolf/data](https://hub.docker.com/r/killerwolf/data)
+These were dropped because an official or better-maintained image does the same
+job. The history is intact if you need the old Dockerfiles.
 
-### killerwolf/h2o
+| Image | Use instead |
+| --- | --- |
+| `ansible` | [`alpine/ansible`](https://hub.docker.com/r/alpine/ansible) or [`willhallonline/ansible`](https://hub.docker.com/r/willhallonline/ansible) |
+| `nodejs` | [`node:alpine`](https://hub.docker.com/_/node) |
+| `hugo` | [`klakegg/hugo`](https://hub.docker.com/r/klakegg/hugo) (referenced by Hugo's own docs) |
+| `phptoolbelt` | `composer:2` / `php:8` official images |
+| `nginx-php-imagick` | `php:8-fpm-alpine` + `apk add php-pecl-imagick`, `nginx:alpine` |
+| `people-front-app` | project-specific; build it in the app's own repo |
+| `data` | `alpine` or `busybox` directly |
+| `h2o` | never built — no upstream project of that name is maintained here |
+| `weed` | [`chrislusf/seaweedfs`](https://hub.docker.com/r/chrislusf/seaweedfs) |
 
-WIP - containerised [h2o](https://h2o.examp1e.net/) WebServer
+## Maintenance
 
-### killerwolf/hugo
+CI lives in `.github/workflows/ci.yml`: hadolint, shellcheck, a build of both
+architectures, a smoke test that checks the container refuses to run without
+`S3_BUCKET`, a Trivy scan, and a digest-drift check that warns when the pinned
+base image moves. Releases are pushed to Docker Hub from `master`.
 
-Hugo is a lightweight, jekyll-like blog engine written in GOlang.  
-*Documentation:* [hugo/README.md](https://github.com/killerwolf/Dockerfiles/tree/master/hugo)  
-*DockerHub:* [killerwolf/hugo](https://hub.docker.com/r/killerwolf/hugo)
+Images on Docker Hub are only rebuilt when a push to `master` lands. There is no
+scheduled rebuild, so tags follow this repository rather than upstream.
 
-### killerwolf/nodejs
+## Contributing
 
-Run your node app with this fully-featured node/npm env.  
-*Documentation:* [nodejs/README.md](https://github.com/killerwolf/Dockerfiles/tree/master/nodejs)  
-*DockerHub:* [killerwolf/nodejs](https://hub.docker.com/r/killerwolf/nodejs)
-
-### killerwolf/weed
-
-WIP - [SeaWeedFS](https://github.com/chrislusf/seaweedfs) brought to the docker world
+Keep an image here only if no maintained image covers the need, and expect CI to
+enforce it. Fork and send a pull request.

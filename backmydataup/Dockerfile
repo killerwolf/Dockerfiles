@@ -1,26 +1,22 @@
-FROM alpine:latest
+# syntax=docker/dockerfile:1
+#
+# Pinned by digest so the base cannot change under us: AWS CLI releases often
+# rebuild the same tag with a newer AL2023 layer set.
+#   amd64 + arm64 (verified against the manifest list on 2026-10-01)
+ARG AWS_CLI_VERSION=2.37.7
+FROM amazon/aws-cli:${AWS_CLI_VERSION}@sha256:95f8d1e6d31aaa16997d1406eb532b0ca6a9830fe8a859c37a0fd223f10959e5
 
-MAINTAINER killerwolf <killerwolf06@gmail.com> @killerwolf
+LABEL org.opencontainers.image.title="backmydataup" \
+      org.opencontainers.image.description="Archive a data volume and sync it to S3 or any S3-compatible store" \
+      org.opencontainers.image.source="https://github.com/killerwolf/Dockerfiles" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.version="1.0.0"
 
-#dedicated backup volume
-VOLUME /backup
+# The upstream image hard-sets ENTRYPOINT ["/usr/local/bin/aws"], which would
+# swallow our script as an argument to `aws`. Reset it so the script runs.
+ENTRYPOINT ["/backmydataup.sh"]
 
-# Install awscli
-WORKDIR /tmp
-RUN apk add --update python groff \
-	&& wget http://s3.amazonaws.com/aws-cli/awscli-bundle.zip -O awscli-bundle.zip \
-	&& unzip awscli-bundle.zip \
-	&& ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws \
-	&& rm awscli-bundle.zip \
-	&& rm -rf /var/cache/apk/* \
-	&& rm -rf awscli-bundle
+VOLUME ["/data", "/backup"]
 
-#Configure AWS cli
-ENV AWS_ACCESS_KEY_ID AWS_ACCESS_KEY_ID
-ENV AWS_SECRET_ACCESS_KEY AWS_SECRET_ACCESS_KEY
-ENV S3_BUCKET S3_BUCKET
-
-# create archive of volume folder and store it on AWS
-ADD backmydataup.sh /backmydataup.sh
-RUN chmod +x /backmydataup.sh
-CMD ["/backmydataup.sh"]
+COPY backmydataup.sh /backmydataup.sh
+RUN chmod 0755 /backmydataup.sh
