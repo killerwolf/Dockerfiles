@@ -42,9 +42,9 @@ job. The history is intact if you need the old Dockerfiles.
 CI lives in `.github/workflows/ci.yml`: hadolint, shellcheck, a build of both
 architectures, a smoke test that checks the container refuses to run without
 `S3_BUCKET`, a Trivy scan, and a digest-drift check that warns when the pinned
-base image moves. Releases are pushed to Docker Hub from `master`.
+base image moves. Releases are pushed to Docker Hub from `main`.
 
-Images on Docker Hub are only rebuilt when a push to `master` lands. There is no
+Images on Docker Hub are only rebuilt when a push to `main` lands. There is no
 scheduled rebuild, so tags follow this repository rather than upstream.
 
 ## Contributing
