@@ -94,11 +94,27 @@ jobs:
           tags: ${{ env.IMAGE_NAME }}:smoke
           cache-from: type=gha
 
+      # runner.temp is not writable by the runner user, so stage fixtures in the
+      # workspace. They are created here so the mounts below are not populated
+      # by Docker as root.
+      - name: Stage smoke test fixtures
+        run: |
+          set -euo pipefail
+          rm -rf ci-smoke
+          mkdir -p ci-smoke/data/nested ci-smoke/out ci-smoke/stub
+          echo payload > ci-smoke/data/file.txt
+          echo nested > ci-smoke/data/nested/deep.txt
+          cat > ci-smoke/stub/aws <<'STUB'
+          #!/bin/sh
+          echo "stub aws: $*"
+          STUB
+          chmod +x ci-smoke/stub/aws
+
       - name: "Guard - script must not run when S3_BUCKET is unset"
         run: |
           set +e
           output=$(docker run --rm \
-            -v "${{ runner.temp }}/data:/data:ro" \
+            -v "$PWD/ci-smoke/data:/data:ro" \
             "${{ env.IMAGE_NAME }}:smoke" 2>&1)
           status=$?
           set -e
@@ -113,26 +129,31 @@ jobs:
       - name: Smoke test happy path against a stub aws
         run: |
           set -euo pipefail
-          mkdir -p "${{ runner.temp }}/data" "${{ runner.temp }}/out"
-          echo payload > "${{ runner.temp }}/data/file.txt"
-          stub=$(mktemp -d)
-          cat > "$stub/aws" <<'STUB'
-          #!/bin/sh
-          echo "stub aws: $*"
-          STUB
-          chmod +x "$stub/aws"
           docker run --rm \
-            -v "${{ runner.temp }}/data:/data:ro" \
-            -v "${{ runner.temp }}/out:/backup" \
-            -v "$stub/aws:/stub/aws:ro" \
+            -v "$PWD/ci-smoke/data:/data:ro" \
+            -v "$PWD/ci-smoke/out:/backup" \
+            -v "$PWD/ci-smoke/stub:/stub:ro" \
             -e BACKUP_TIMESTAMP=ci-smoke \
             -e DATA_DIR=/data -e BACKUP_DIR=/backup \
             -e S3_BUCKET=ci-bucket -e S3_ENDPOINT=https://s3.example.net \
             -e PATH="/stub:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
             "${{ env.IMAGE_NAME }}:smoke"
-          test -f "${{ runner.temp }}/out/data_ci-smoke.tar.gz"
-          tar tzf "${{ runner.temp }}/out/data_ci-smoke.tar.gz" | grep -q "^data/file.txt$"
-          echo "archive contents verified"
+
+          archive=ci-smoke/out/data_ci-smoke.tar.gz
+          test -f "$archive"
+          echo "--- archive contents ---"
+          listing=$(tar tzf "$archive")
+          echo "$listing"
+          echo "$listing" | grep -qx "data/file.txt"
+          echo "$listing" | grep -qx "data/nested/deep.txt"
+          mkdir -p ci-smoke/extract
+          tar xzf "$archive" -C ci-smoke/extract
+          grep -qx payload ci-smoke/extract/data/file.txt
+          echo "archive contents and extraction verified"
+
+      - name: Clean up smoke test fixtures
+        if: always()
+        run: rm -rf ci-smoke
 
       - name: Scan image with Trivy
         uses: aquasecurity/trivy-action@v0.33.1
