@@ -161,9 +161,14 @@ jobs:
         run: rm -rf ci-smoke
 
       - name: Scan image with Trivy
-        uses: aquasecurity/trivy-action@v0.33.1
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ${{ env.IMAGE_NAME }}:smoke
+          # Pin the scanner version. The action's default resolved to v0.65.0,
+          # a release that currently ships zero release assets, so the install
+          # step died with a bare 'exit 1' and no message. Pinning keeps the
+          # scan reproducible and survives a bad upstream release.
+          version: v0.70.0
           severity: CRITICAL,HIGH
           ignore-unfixed: true
           exit-code: '1'
