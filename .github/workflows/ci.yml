@@ -17,12 +17,12 @@ env:
 jobs:
   validate:
     name: Lint and shellcheck
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Lint Dockerfile
-        uses: hadolint/hadolint-action@v3.1.0
+        uses: hadolint/hadolint-action@v3.5.0
         with:
           dockerfile: backmydataup/Dockerfile
           failure-threshold: warning
@@ -36,39 +36,45 @@ jobs:
       - name: Verify script syntax
         run: sh -n backmydataup/backmydataup.sh
 
+      # The tag resolves to a multi-arch manifest index, whose body has no
+      # top-level .digest. Read the canonical digest from the response header
+      # instead, which is what the registry itself resolves the tag to.
       - name: Check base image digest is current
         run: |
+          set -euo pipefail
           tag=$(grep -oP 'AWS_CLI_VERSION=\K[0-9.]+' backmydataup/Dockerfile)
           pinned=$(grep -oP '@sha256:\K[0-9a-f]{64}' backmydataup/Dockerfile)
-          actual=$(curl -sS \
-            -H "Authorization: Bearer $(curl -sS \
-              "https://auth.docker.io/token?service=registry.docker.io&scope=repository:amazon/aws-cli:pull" \
-              | jq -r .token)" \
-            -H "Accept: application/vnd.oci.image.index.v1+json" \
+          token=$(curl -sS \
+            "https://auth.docker.io/token?service=registry.docker.io&scope=repository:amazon/aws-cli:pull" \
+            | jq -r .token)
+          actual=$(curl -sS -D - -o /dev/null \
+            -H "Authorization: Bearer $token" \
+            -H "Accept: application/vnd.oci.image.index.v1+json,application/vnd.docker.distribution.manifest.list.v2+json" \
             "https://registry-1.docker.io/v2/amazon/aws-cli/manifests/$tag" \
-            | jq -r .digest)
+            | tr -d '\r' | awk 'tolower($1) == "docker-content-digest:" { print $2 }')
           echo "tag=$tag"
           echo "pinned=$pinned"
-          echo "actual=$actual"
+          echo "actual=${actual:-<none>}"
+          [ -n "$actual" ] || { echo "::error::could not read upstream digest"; exit 1; }
           if [ "$pinned" != "$actual" ]; then
-            echo "::warning::base image digest drift for amazon/aws-cli:$tag"
-            echo "pinned $pinned but upstream is $actual"
+            echo "::notice title=Base image digest drift::amazon/aws-cli:$tag moved"
+            echo "pinned $pinned, upstream is $actual. Review the upstream changes, then update the digest in backmydataup/Dockerfile."
           fi
 
   build:
     name: Build, scan and smoke test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: validate
     permissions:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@v4
 
       - name: Build (multi-arch, no push)
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: backmydataup
           platforms: linux/amd64,linux/arm64
@@ -79,7 +85,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Smoke test on amd64
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: backmydataup
           platforms: linux/amd64
@@ -129,7 +135,7 @@ jobs:
           echo "archive contents verified"
 
       - name: Scan image with Trivy
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.33.1
         with:
           image-ref: ${{ env.IMAGE_NAME }}:smoke
           severity: CRITICAL,HIGH
@@ -138,24 +144,24 @@ jobs:
 
   publish:
     name: Publish to Docker Hub
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: build
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: docker/setup-qemu-action@v3
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-qemu-action@v4
+      - uses: docker/setup-buildx-action@v4
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Derive tags
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ${{ env.IMAGE_NAME }}
           tags: |
@@ -163,7 +169,7 @@ jobs:
             type=raw,value=latest,enable=${{ github.event_name == 'push' }}
 
       - name: Build and push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: backmydataup
           platforms: linux/amd64,linux/arm64
