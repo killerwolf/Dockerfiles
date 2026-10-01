@@ -48,7 +48,10 @@ jobs:
         run: |
           set -euo pipefail
           tag=$(grep -oP 'AWS_CLI_VERSION=\K[0-9.]+' backmydataup/Dockerfile)
-          pinned=$(grep -oP '@sha256:\K[0-9a-f]{64}' backmydataup/Dockerfile)
+          # Compare the full "sha256:<hex>" string. Stripping the prefix here
+          # would leave the pinned value bare while the registry always returns
+          # the prefixed form, so the comparison would never match.
+          pinned=$(grep -oP '@\Ksha256:[0-9a-f]{64}' backmydataup/Dockerfile)
           token=$(curl -sS \
             "https://auth.docker.io/token?service=registry.docker.io&scope=repository:amazon/aws-cli:pull" \
             | jq -r .token)
